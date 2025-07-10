@@ -48,6 +48,6 @@ oxlint+eslintを使用してください。
 }
 ```
 
-```
-# .lintstagedrc.js
+```js
+// .lintstagedrc.js
 ```
