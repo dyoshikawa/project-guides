@@ -15,9 +15,15 @@ pnpmを使用してください。
 
 ## package.jsonの
 
-- `type` を `module` にしてください。
+`type` を `module` にしてください。
 
-## Format,Lint
+## Format
+
+biomeを使用してください。
+
+## Lint
+
+oxlint+eslintを使用してください。
 
 ## Typecheck
 
