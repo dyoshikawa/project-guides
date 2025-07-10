@@ -247,6 +247,9 @@ simple-git-hooksとlint-stagedを使ってpre-commit hookを設定してくだ�
 ```json
 // package.json
 {
+  "scripts": {
+    "prepare": "pnpm exec simple-git-hooks"
+  },
   "simple-git-hooks": {
     "pre-commit": "pnpm exec lint-staged"
   }
@@ -266,10 +269,7 @@ export default {
 };
 ```
 
-hookの初期化:
-```bash
-pnpm exec simple-git-hooks
-```
+hookの初期化は`pnpm install`時に自動的に実行されます（prepareスクリプトにより）。
 
 必要なdevDependencies:
 - `simple-git-hooks`
@@ -277,6 +277,38 @@ pnpm exec simple-git-hooks
 - `secretlint`
 - `@secretlint/secretlint-rule-preset-recommend`
 - `cspell`
+
+## セキュリティチェック
+
+### secretlint
+
+コミット前に機密情報（APIキー、パスワード、トークンなど）が含まれていないかチェックします。
+
+```json
+// .secretlintrc.json
+{
+  "rules": [
+    {
+      "id": "@secretlint/secretlint-rule-preset-recommend"
+    }
+  ]
+}
+```
+
+```json
+// package.json scripts
+{
+  "scripts": {
+    "secretlint": "secretlint \"**/*\""
+  }
+}
+```
+
+secretlintは`.lintstagedrc.js`で設定されているため、コミット時に自動的に実行されます。手動で実行する場合：
+
+```bash
+pnpm run secretlint
+```
 
 ## その他の推奨ツール
 
