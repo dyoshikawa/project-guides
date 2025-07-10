@@ -86,7 +86,7 @@ biomeを使用してください。
 
 ## Lint
 
-oxlint+eslintを使用してください。
+oxlint+eslintを使用してください。高速なoxlintをメインで使用しつつ、足りないルールはeslintで補う運用です。高速さを活かすために、常にoxlintを先に実行すべきです。
 
 ### oxlint
 
@@ -179,12 +179,12 @@ TypeScript コンパイラを使用します。tsgo (TypeScript Native Preview �
 // package.json scripts
 {
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    // または tsgo を使う場合
     "typecheck": "tsgo --noEmit"
   }
 }
 ```
+
+エディタ拡張やLSPなどの支援を受けたいのでtscもインストールしますが、CLIでは高速なtsgoを使用します。
 
 必要なdevDependencies:
 - `typescript`
