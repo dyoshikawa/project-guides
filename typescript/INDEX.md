@@ -167,7 +167,6 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  oxlint.configs["flat/recommended"],
   {
     languageOptions: {
       parserOptions: {
@@ -183,7 +182,10 @@ export default tseslint.config(
     rules: {
       "no-type-assertion/no-type-assertion": "error",
     },
-  }
+  },
+
+  // oxlintの設定の読み込みは最後に行うべき（oxlint公式の指示より）
+  ...oxlint.buildFromOxlintConfigFile("./.oxlintrc.json"),
 );
 ```
 
