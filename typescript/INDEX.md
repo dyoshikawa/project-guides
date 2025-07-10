@@ -15,10 +15,8 @@ gibo dump macos node > .gitignore
 miseを使用してください。
 プロジェクトルートに `.mise.toml` を作成してください。
 
-```toml
-# .mise.toml
-[tools]
-node = "20"
+```bash
+mise use node@24 pnpm@latest
 ```
 
 ## Runtime
