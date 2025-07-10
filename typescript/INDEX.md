@@ -366,6 +366,60 @@ secretlintは`.lintstagedrc.js`で設定されているため、コミット時�
 pnpm run secretlint
 ```
 
+### cspell
+
+コード内のスペルミスをチェックします。
+
+```json
+// cspell.json
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "*.log",
+    ".git",
+    ".pnpm-store",
+    "pnpm-lock.yaml",
+    "package-lock.json",
+    "yarn.lock"
+  ]
+}
+```
+
+使い方:
+1. 初回実行時、エラーとなった単語を確認
+```bash
+pnpm cspell "**/*.{md,ts,tsx,js,jsx,json}" --no-progress
+```
+
+2. プロジェクト固有の単語や技術用語をcspell.jsonのwordsに追加
+```json
+{
+  "words": [
+    "tsup",
+    "vitest",
+    "oxlint",
+    // その他のプロジェクト固有の単語
+  ]
+}
+```
+
+```json
+// package.json scripts
+{
+  "scripts": {
+    "cspell": "cspell '**/*.{md,ts,tsx,js,jsx,json}' --no-progress"
+  }
+}
+```
+
+cspellは`.lintstagedrc.js`で設定されているため、コミット時に自動的に実行されます。
+
 ## その他の推奨ツール
 
 ### 開発ツール
