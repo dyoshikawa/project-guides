@@ -320,7 +320,8 @@ export default {
     "oxlint --fix --max-warnings 0",
     "eslint --fix --max-warnings 0 --cache --no-warn-ignored",
   ],
-  "*.ts": [() => "tsc --noEmit", () => "pnpm test"],
+  "*.test.ts": ["vitest run --silent=true"],
+  "*.ts": [() => "tsgo --noEmit"],
   "**/*": ["secretlint", "cspell"],
 };
 ```
