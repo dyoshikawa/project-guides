@@ -1,0 +1,27 @@
+{
+  "name": "project-guides",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "simple-git-hooks",
+    "secretlint": "secretlint"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "**/*": "secretlint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@secretlint/secretlint-rule-pattern": "^10.2.0",
+    "@secretlint/secretlint-rule-preset-recommend": "^10.2.0",
+    "lint-staged": "^16.1.2",
+    "secretlint": "^10.2.0",
+    "simple-git-hooks": "^2.13.0"
+  }
+}
