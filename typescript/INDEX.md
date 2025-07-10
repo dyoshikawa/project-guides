@@ -99,6 +99,52 @@ oxlint+eslintを使用してください。高速なoxlintをメインで使用�
 ### oxlint
 
 ```json
+// .oxlintrc.json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+
+  "plugins": [
+    "typescript",
+    "import",
+    "unicorn"
+  ],
+
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "style": "off",
+    "pedantic": "off"
+  },
+
+  "rules": {
+    "eqeqeq": "error",
+    "import/no-cycle": "error",
+    "no-console": "off",
+    "typescript/no-explicit-any": "warn",
+    "unicorn/prefer-node-protocol": "error",
+    "unicorn/no-array-reduce": "off"
+  },
+
+  "env": {
+    "browser": false,
+    "node": true,
+    "es2024": true
+  },
+
+  "ignorePatterns": ["dist/**", "coverage/**", "*.d.ts", "node_modules/**"],
+  
+  "overrides": [
+    {
+      "files": ["**/*.test.ts"],
+      "rules": {
+        "typescript/no-explicit-any": "off"
+      }
+    }
+  ]
+}
+```
+
+```json
 // package.json scripts
 {
   "scripts": {
