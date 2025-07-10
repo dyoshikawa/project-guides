@@ -1,5 +1,15 @@
 # Typescript プロジェクトガイド
 
+## .gitignore
+
+gibo CLIを使います。
+
+```bash
+gibo dump macos node > .gitignore
+```
+
+以後、必要に応じてこの.gitignoreに記述を追加していきます。
+
 ## Runtime Manager
 
 miseを使用してください。
