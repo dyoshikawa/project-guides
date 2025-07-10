@@ -323,6 +323,7 @@ export default {
   "*.test.ts": ["vitest run --silent=true"],
   "*.ts": [() => "tsgo --noEmit"],
   "**/*": ["secretlint", "cspell"],
+  "package.json": [() => "sort-package-json"],
 };
 ```
 
