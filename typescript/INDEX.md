@@ -466,6 +466,96 @@ pnpm run sort
 }
 ```
 
+## rulesync
+
+AIツール（Claude、Cursor、Windsurf等）にプロジェクトのコンテキストを提供するツールです。
+
+### インストール
+
+```bash
+pnpm add -D @dyoshikawa/rulesync
+```
+
+### 設定ファイル
+
+#### .rulesync/overview.md
+
+プロジェクトの概要とAIへの指示を記載します。
+
+```markdown
+---
+root: true
+targets: ["*"]
+description: "Project overview and development philosophy"
+globs: "src/**/*.ts"
+---
+
+# プロジェクト概要
+
+[プロジェクトの説明をここに記載]
+
+## 開発方針
+
+- TypeScriptファーストの開発
+- クリーンアーキテクチャの原則に従う
+- テスト駆動開発を推奨
+
+## AIへの指示
+
+- 型安全性を重視したコードを生成すること
+- エラーハンドリングを適切に行うこと
+- 日本語のコメントを使用すること
+```
+
+#### .rulesync/.mcp.json
+
+MCP (Model Context Protocol) サーバーの設定を記載します。
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "path/to/allowed/directory"]
+    }
+  }
+}
+```
+
+### 使い方
+
+```json
+// package.json scripts
+{
+  "scripts": {
+    "rulesync": "rulesync sync"
+  }
+}
+```
+
+設定を同期:
+```bash
+pnpm run rulesync
+```
+
+これにより、各AIツールの設定ファイルが自動生成されます：
+- `.cursorrules` (Cursor用)
+- `.windsurfrules` (Windsurf用)
+- `CLAUDE.md` (Claude用)
+- `.mcp/servers.json` (MCP設定)
+
+### .gitignore
+
+rulesyncが生成するファイルは.gitignoreに追加してください：
+
+```
+# rulesync generated files
+.cursorrules
+.windsurfrules
+CLAUDE.md
+.mcp/
+```
+
 ## GitHub Actions
 
 ### CI ワークフロー

@@ -7,7 +7,11 @@
     "oxlint",
     "oxlintrc",
     "tsgo",
-    "lintstagedrc"
+    "lintstagedrc",
+    "dyoshikawa",
+    "modelcontextprotocol",
+    "windsurfrules",
+    "rulesync"
   ],
   "ignorePaths": [
     "node_modules",
