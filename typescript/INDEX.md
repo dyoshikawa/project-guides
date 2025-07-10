@@ -292,6 +292,26 @@ pnpm exec simple-git-hooks
 }
 ```
 
+### package.jsonの整形
+sort-package-jsonを使用してpackage.jsonのキーを一貫した順序に保ちます。
+
+```json
+// package.json scripts
+{
+  "scripts": {
+    "sort": "sort-package-json"
+  }
+}
+```
+
+package.jsonを編集した後に実行:
+```bash
+pnpm run sort
+```
+
+必要なdevDependencies:
+- `sort-package-json`
+
 ### 統合チェックコマンド
 
 ```json
