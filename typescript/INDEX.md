@@ -355,3 +355,110 @@ pnpm run sort
   }
 }
 ```
+
+## GitHub Actions
+
+### CI ワークフロー
+
+プルリクエストとmainブランチへのプッシュ時に、コード品質チェックとテストを実行します。
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    name: Code Quality & Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.12.2
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run check
+        run: pnpm check
+
+      - name: Run secretlint
+        run: pnpm secretlint
+
+      - name: Run cspell
+        run: pnpm cspell
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build project
+        run: pnpm build
+```
+
+### Release ワークフロー（npmパッケージの場合）
+
+npmパッケージとして公開する場合は、リリース時の自動公開ワークフローを設定します。
+
+```yaml
+# .github/workflows/release.yml
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.12.2
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run quality checks
+        run: |
+          pnpm check
+          pnpm secretlint
+          pnpm cspell
+          pnpm test
+
+      - name: Publish to npm
+        run: pnpm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+必要なGitHub Secrets（npmパッケージの場合）:
+- `NPM_TOKEN`: npmパブリッシュ用のアクセストークン
