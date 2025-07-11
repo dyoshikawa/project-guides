@@ -826,3 +826,49 @@ RUN npm install -g pnpm@latest
 3. **Node.jsメモリ制限**: `NODE_OPTIONS`で4GBに設定
 4. **mise**: Runtime Managerとして事前インストール
 5. **gibo**: .gitignore生成ツールとして事前インストール
+
+## Claude Code設定
+
+Claude Codeを使用する場合の推奨設定です。
+
+### .claude/settings.json
+
+```json
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": ["Bash(gh api:*)"]
+  }
+}
+```
+
+### 設定の説明
+
+- **defaultMode**: `"acceptEdits"`に設定することで、Claudeが提案する編集を自動的に受け入れます。これにより開発効率が向上します
+- **allow**: GitHub CLIのAPI操作を許可します。これによりPR作成やissue操作などが可能になります
+
+### その他の設定オプション
+
+必要に応じて以下の設定も追加できます：
+
+```json
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": ["Bash(gh api:*)"],
+    "block": []
+  },
+  "tools": {
+    "enabled": true
+  }
+}
+```
+
+### .gitignore への追加
+
+プロジェクトごとにClaude Codeの設定を変更する場合は、ローカル設定ファイルを.gitignoreに追加することを推奨します：
+
+```
+# Claude Code local settings
+.claude/settings.local.json
+```
