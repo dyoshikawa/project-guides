@@ -2,16 +2,17 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    "gibo",
     "bcheck",
+    "ccinstall",
+    "dyoshikawa",
+    "gibo",
+    "lintstagedrc",
+    "modelcontextprotocol",
     "oxlint",
     "oxlintrc",
+    "rulesync",
     "tsgo",
-    "lintstagedrc",
-    "dyoshikawa",
-    "modelcontextprotocol",
-    "windsurfrules",
-    "rulesync"
+    "windsurfrules"
   ],
   "ignorePaths": [
     "node_modules",

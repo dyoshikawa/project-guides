@@ -66,5 +66,9 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -a "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
   -x
 
-# Install Claude
-RUN npm install -g @anthropic-ai/claude-code
+### Customize ###
+
+# Install mise
+RUN curl https://mise.run | sh
+RUN echo "eval \"\$(/home/node/.local/bin/mise activate zsh)\"" >> "/home/node/.zshrc"
+RUN echo "alias ccinstall=\"npm install -g @anthropic-ai/claude-code\"" >> "/home/node/.zshrc"
