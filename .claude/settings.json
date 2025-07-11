@@ -1,7 +1,6 @@
 {
-    "permissions": {
-        "allow": [
-            "Bash(gh api:*)"
-        ]
-    }
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": ["Bash(gh api:*)"]
+  }
 }

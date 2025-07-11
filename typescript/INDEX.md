@@ -674,3 +674,155 @@ jobs:
 
 必要なGitHub Secrets（npmパッケージの場合）:
 - `NPM_TOKEN`: npmパブリッシュ用のアクセストークン
+
+## Dev Container
+
+VS Code Dev Containerを使用すると、一貫した開発環境を提供できます。
+
+### .devcontainer/devcontainer.json
+
+```json
+{
+  "name": "TypeScript Project",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TZ": "${localEnv:TZ:Asia/Tokyo}"
+    }
+  },
+  "runArgs": ["--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "oxc.oxc-vscode",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "biomejs.biome"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "biomejs.biome",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          },
+          "zsh": {
+            "path": "zsh"
+          }
+        }
+      }
+    }
+  },
+  "remoteUser": "node",
+  "mounts": [
+    "source=ts-project-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=ts-project-config-${devcontainerId},target=/home/node/.config,type=volume"
+  ],
+  "remoteEnv": {
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace"
+}
+```
+
+### .devcontainer/Dockerfile
+
+```dockerfile
+FROM node:20
+
+ARG TZ
+ENV TZ="$TZ"
+
+# Install basic development tools
+RUN apt update && apt install -y less \
+  git \
+  procps \
+  sudo \
+  fzf \
+  zsh \
+  man-db \
+  unzip \
+  gnupg2 \
+  gh \
+  jq
+
+# Ensure default node user has access to /usr/local/share
+RUN mkdir -p /usr/local/share/npm-global && \
+  chown -R node:node /usr/local/share
+
+ARG USERNAME=node
+
+# Persist bash history
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+  && mkdir /commandhistory \
+  && touch /commandhistory/.bash_history \
+  && chown -R $USERNAME /commandhistory
+
+# Set `DEVCONTAINER` environment variable to help with orientation
+ENV DEVCONTAINER=true
+
+# Create workspace and config directories and set permissions
+RUN mkdir -p /workspace /home/node/.config && \
+  chown -R node:node /workspace /home/node/.config
+
+WORKDIR /workspace
+
+# Install git-delta for better git diffs
+RUN ARCH=$(dpkg --print-architecture) && \
+  wget "https://github.com/dandavison/delta/releases/download/0.18.2/git-delta_0.18.2_${ARCH}.deb" && \
+  sudo dpkg -i "git-delta_0.18.2_${ARCH}.deb" && \
+  rm "git-delta_0.18.2_${ARCH}.deb"
+
+# Set up non-root user
+USER node
+
+# Install global packages
+ENV NPM_CONFIG_PREFIX=/usr/local/share/npm-global
+ENV PATH=$PATH:/usr/local/share/npm-global/bin
+
+# Set the default shell to zsh
+ENV SHELL=/bin/zsh
+
+# Install zsh with plugins
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.2.0/zsh-in-docker.sh)" -- \
+  -p git \
+  -p fzf \
+  -a "source /usr/share/doc/fzf/examples/key-bindings.zsh" \
+  -a "source /usr/share/doc/fzf/examples/completion.zsh" \
+  -a "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+  -x
+
+### TypeScript Project Specific ###
+
+# Install mise
+RUN curl https://mise.run | sh
+RUN echo "eval \"\$(/home/node/.local/bin/mise activate zsh)\"" >> "/home/node/.zshrc"
+
+# Install gibo for gitignore generation
+RUN npm install -g gibo
+
+# Pre-install commonly used global tools
+RUN npm install -g pnpm@latest
+```
+
+### VS Code拡張機能の説明
+
+- **oxc.oxc-vscode**: OXCの公式VS Code拡張機能。高速なLintチェックを提供
+- **dbaeumer.vscode-eslint**: ESLintの公式拡張機能。型チェック関連のルールをサポート
+- **eamodio.gitlens**: Git履歴とコードの関連性を可視化
+- **biomejs.biome**: Biomeの公式拡張機能。高速なフォーマットを提供
+
+### カスタマイズポイント
+
+1. **タイムゾーン**: デフォルトは`Asia/Tokyo`ですが、環境変数`TZ`で変更可能
+2. **ボリュームマウント**: bash履歴と設定ファイルを永続化
+3. **Node.jsメモリ制限**: `NODE_OPTIONS`で4GBに設定
+4. **mise**: Runtime Managerとして事前インストール
+5. **gibo**: .gitignore生成ツールとして事前インストール
